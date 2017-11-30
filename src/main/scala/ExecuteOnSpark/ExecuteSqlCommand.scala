@@ -1,11 +1,16 @@
 package ExecuteOnSpark
 
 import java.util.Properties
+
 import org.apache.spark.sql.SparkSession
 import LoadPgDBConf.ReadProperties
 import Protocols.ParseUDFCommand
 
+import scala.collection.mutable.ArrayBuffer
+
 object ExecuteSqlCommand {
+
+  val localTempView = new ArrayBuffer[String]
 
   def executeSqlCommand(spark: SparkSession):Unit = {
 
@@ -42,7 +47,10 @@ object ExecuteSqlCommand {
 
     for(i <- 0 until numberOfTables){
       inputTables(i) = inputList(i)
-      spark.read.jdbc(url, inputTables(i), connectionProperties).createTempView(inputTables(i))
+      if(!localTempView.contains(inputTables(i))){
+        localTempView += inputTables(i)
+        spark.read.jdbc(url, inputTables(i), connectionProperties).createTempView(inputTables(i))
+      }
     }
 
     val executeCommand = spark.sql(sqlCommand)
