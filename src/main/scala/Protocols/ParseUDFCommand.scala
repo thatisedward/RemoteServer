@@ -45,14 +45,4 @@ object ParseUDFCommand {
     return outputList
   }
 
-  /*
-  def main(args: Array[String]): Unit = {
-    val cmd = "hello%x,y%z"
-    parseUDFCommand(cmd)
-    println(getSqlCommand())
-    println(getInputList().length)
-    println(getOutputList())
-
-  }
-  */
 }

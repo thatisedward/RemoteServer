@@ -14,12 +14,11 @@ object ExecuteSqlCommand {
 
   def executeSqlCommand(spark: SparkSession):Unit = {
 
-    //val urlLocal = "jdbc:postgresql://localhost/test_db"
     val url = ReadProperties.getPgDB_url()
     val user = ReadProperties.getPgDB_user()
     val password = ReadProperties.getPgDB_password()
 
-    //Setting connection properties
+
     val connectionProperties = new Properties()
     connectionProperties.put("user", user)
     connectionProperties.put("password", password)
@@ -33,8 +32,7 @@ object ExecuteSqlCommand {
 
     val inputTables = new Array[String](numberOfTables)
 
-
-    /* testing the connection to local test_db with jdbcDataFrame
+    /*
     val jdbcDF1 = spark.read
       .jdbc(url, "student", connectionProperties)
       .createTempView("student")
@@ -43,7 +41,6 @@ object ExecuteSqlCommand {
       .jdbc(url, "grade", connectionProperties)
       .createTempView("grade")
     */
-    // Saving data to a JDBC source
 
     for(i <- 0 until numberOfTables){
       inputTables(i) = inputList(i)
@@ -69,40 +66,4 @@ object ExecuteSqlCommand {
     */
   }
 
-  /*
-  def main(args: Array[String]): Unit = {
-
-    val numberOfTalbes = 4;
-    val sqlCmd = "select * from grade inner join student on grade.Stu_Id = student.Student_Id"
-
-    val testSqlCmd =
-      "select count(*) "+
-        "from store_sales" +
-        ", household_demographics" +
-        ", time_dim" +
-        ", store " +
-        "where ss_sold_time_sk = time_dim.t_time_sk " +
-        "and ss_hdemo_sk = household_demographics.hd_demo_sk " +
-        "and ss_store_sk = s_store_sk and time_dim.t_hour = 8 " +
-        "and time_dim.t_minute >= 30 and household_demographics.hd_dep_count = 5 " +
-        "and store.s_store_name = 'ese' " +
-        "order by count(*)"
-
-    val inputList = new Array[String](numberOfTalbes)
-    val outputList = "Destination of Table name"
-
-    inputList(0) = "store_sales"
-    inputList(1) = "household_demographics"
-    inputList(2) = "time_dim"
-    inputList(3) = "store"
-
-    val LocalTableName = new Array[String](numberOfTalbes)
-
-    for(i <- 0 until numberOfTalbes){
-      LocalTableName(i) = inputList(i)
-      println(LocalTableName(i))
-    }
-
-  }
-  */
 }

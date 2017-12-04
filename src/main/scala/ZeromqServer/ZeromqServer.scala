@@ -37,13 +37,6 @@ object ZeromqServer {
       ParseUDFCommand.parseUDFCommand(receivedRequest)
       ExecuteSqlCommand.executeSqlCommand(spark)
 
-      //  Do some 'work'
-      try {
-        Thread.sleep (1000)
-      } catch  {
-        case e: InterruptedException => e.printStackTrace()
-      }
-
       val reply = "The request has been received ... ".getBytes
       reply(reply.length-1)=0 //Sets the last byte of the reply to 0
       socket.send(reply, 0)
