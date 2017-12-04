@@ -23,3 +23,4 @@ Processes:
 -- The result could be saving back to the PgDB by write.jdbc.
 
 The sbt-assembly is used for packing the dependencies.
+ 
