@@ -6,7 +6,7 @@ Main functions:
 
 -- The remote server uses ZerMQ to have a message interaction with clients (postgres database).
 
--- The remote server uses JdbcRdd to have a data interaction (both read and wirte) with postgres database.
+-- The remote server uses JdbcDF to have a data interaction (both read and wirte) with postgres database.
 
 Processes:
 
