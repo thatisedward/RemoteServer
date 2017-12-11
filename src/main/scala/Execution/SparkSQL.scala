@@ -1,15 +1,13 @@
-package ExecuteOnSpark
-
+package Execution
 import java.util.Properties
 
 import org.apache.spark.sql.SparkSession
 import LoadPgDBConf.ReadProperties
-import Protocols.ParseUDFCommand
+import Protocols._
 
 import scala.collection.mutable.ArrayBuffer
 
-object ExecuteSqlCommand {
-
+object SparkSQL {
   val localTempView = new ArrayBuffer[String]
 
   def executeSqlCommand(spark: SparkSession):Unit = {
@@ -22,9 +20,9 @@ object ExecuteSqlCommand {
     connectionProperties.put("user", user)
     connectionProperties.put("password", password)
 
-    val sqlCommand = ParseUDFCommand.getSqlCommand()
-    val inputList = ParseUDFCommand.getInputList()
-    val outputTable = ParseUDFCommand.getOutputList()
+    val sqlCommand = ParseSQL.getSqlCommand()
+    val inputList = ParseSQL.getInputList()
+    val outputTable = ParseSQL.getOutputList()
 
     val numberOfTables = inputList.length
 
@@ -65,5 +63,4 @@ object ExecuteSqlCommand {
       .jdbc("jdbc:postgresql:dbserver", "schema.tablename", connectionProperties)
     */
   }
-
 }

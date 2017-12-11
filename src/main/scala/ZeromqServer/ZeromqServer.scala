@@ -3,8 +3,7 @@ package ZeromqServer
 /**
   * Created by Edward Zhang.
   */
-import ExecuteOnSpark.ExecuteSqlCommand
-import Protocols.ParseUDFCommand
+import Protocols._
 import org.apache.spark.sql.SparkSession
 import LoadPgDBConf.ReadProperties
 import org.zeromq.ZMQ
@@ -22,7 +21,7 @@ object ZeromqServer {
     print ("Starting ")
     val address = "tcp://*:"+ReadProperties.getZmq_port()
     socket.bind(address)
-    print ("At port: "+ ReadProperties.getZmq_port())
+    println ("On port: "+ ReadProperties.getZmq_port())
     //socket.bind ("tcp://*:5555")
 
     while (true) {
@@ -38,8 +37,7 @@ object ZeromqServer {
         + receivedRequest
         + "]")
 
-      ParseUDFCommand.parseUDFCommand(receivedRequest)
-      ExecuteSqlCommand.executeSqlCommand(spark)
+      CommandRouter.router(receivedRequest, spark)
 
       val reply = "The request has been received ... ".getBytes
       reply(reply.length-1)=0 //Sets the last byte of the reply to 0
