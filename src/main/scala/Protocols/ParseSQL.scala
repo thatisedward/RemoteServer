@@ -39,6 +39,9 @@ object ParseSQL {
     outputList = str
   }
 
+  def getJobNo():Int ={
+    return jobNo
+  }
   def getSqlCommand():String = {
     return sqlCommand
   }

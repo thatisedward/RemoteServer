@@ -26,7 +26,6 @@ object ZeromqServer {
 
     while (true) {
       //  Wait for next request from client
-      //  We will wait for a 0-terminated string (C string) from the client,
       val request = socket.recv (0)
       //  In order to display the 0-terminated string as a String,
       //  we omit the last byte from request
@@ -39,8 +38,8 @@ object ZeromqServer {
 
       CommandRouter.router(receivedRequest, spark)
 
-      val reply = "The request has been received ... ".getBytes
-      reply(reply.length-1)=0 //Sets the last byte of the reply to 0
+      val reply = ("Job "+ParseSQL.getJobNo()+" is finished.").getBytes
+      reply(reply.length-1)=0
       socket.send(reply, 0)
 
     }
