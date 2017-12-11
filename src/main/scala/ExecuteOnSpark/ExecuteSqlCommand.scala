@@ -18,11 +18,9 @@ object ExecuteSqlCommand {
     val user = ReadProperties.getPgDB_user()
     val password = ReadProperties.getPgDB_password()
 
-
     val connectionProperties = new Properties()
     connectionProperties.put("user", user)
     connectionProperties.put("password", password)
-
 
     val sqlCommand = ParseUDFCommand.getSqlCommand()
     val inputList = ParseUDFCommand.getInputList()
@@ -55,8 +53,10 @@ object ExecuteSqlCommand {
     executeCommand.write
       .jdbc(url, outputTable, connectionProperties)
 
-    executeCommand.show()
-    executeCommand.explain()
+    println("Job is succeed...")
+
+    //executeCommand.show()
+    //executeCommand.explain()
 
     // Specifying create table column data types on write
     /*

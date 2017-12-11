@@ -4,7 +4,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 
 object ReadProperties {
 
-  val config: Config = ConfigFactory.load("testPgDB.conf")
+  val config: Config = ConfigFactory.load("PgDB.conf")
 
   def getPgDB_url(): String = {
     config.getString("PgDB_url")
@@ -18,6 +18,9 @@ object ReadProperties {
     config.getString("PgDB_password")
   }
 
+  def getZmq_port(): Int = {
+    config.getInt("Zmq_port")
+  }
   /*
   def getSparkMaster_address(): String={
     config.getString("SparkMaster_address")
@@ -27,4 +30,5 @@ object ReadProperties {
     config.getInt("SparkMaster_port")
   }
   */
+
 }

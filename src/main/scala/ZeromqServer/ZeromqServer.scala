@@ -6,6 +6,7 @@ package ZeromqServer
 import ExecuteOnSpark.ExecuteSqlCommand
 import Protocols.ParseUDFCommand
 import org.apache.spark.sql.SparkSession
+import LoadPgDBConf.ReadProperties
 import org.zeromq.ZMQ
 import org.zeromq.ZMQ.{Context, Socket}
 
@@ -18,8 +19,11 @@ object ZeromqServer {
 
     val context = ZMQ.context(1)
     val socket = context.socket(ZMQ.REP)
-    println ("starting")
-    socket.bind ("tcp://*:5555")
+    print ("Starting ")
+    val address = "tcp://*:"+ReadProperties.getZmq_port()
+    socket.bind(address)
+    print ("At port: "+ ReadProperties.getZmq_port())
+    //socket.bind ("tcp://*:5555")
 
     while (true) {
       //  Wait for next request from client
