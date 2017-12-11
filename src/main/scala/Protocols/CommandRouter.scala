@@ -1,6 +1,6 @@
 package Protocols
 
-import Protocols.ParseSQLCommand._
+import Protocols.ParseSQL._
 
 object CommandRouter {
 
@@ -8,7 +8,7 @@ object CommandRouter {
     val tempCmd =  receivedRequest.split("%",0).toBuffer
 
     if(tempCmd(0) matches("SQL")){
-      ParseSQLCommand.parseSQLCommand(receivedRequest)
+      ParseSQL.parseSQLCommand(receivedRequest)
     }else
     if(tempCmd(0) matches("LR")){
       println("Later...")
