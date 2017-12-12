@@ -21,6 +21,7 @@ object ReadProperties {
   def getZmq_port(): Int = {
     config.getInt("Zmq_port")
   }
+
   /*
   def getSparkMaster_address(): String={
     config.getString("SparkMaster_address")

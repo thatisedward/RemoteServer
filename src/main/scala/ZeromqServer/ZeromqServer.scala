@@ -18,6 +18,7 @@ object ZeromqServer {
 
     val context = ZMQ.context(1)
     val socket = context.socket(ZMQ.REP)
+
     print ("The ZMQ server starting ")
     val address = "tcp://*:"+ReadProperties.getZmq_port()
     socket.bind(address)
@@ -26,21 +27,16 @@ object ZeromqServer {
 
     while (true) {
       //  Wait for next request from client
+
       val request = socket.recv (0)
-      //  In order to display the 0-terminated string as a String,
-      //  we omit the last byte from request
-      //  Creates a String from request, minus the last byte
+
       val receivedRequest = new String(request,0,request.length-1)
 
       println ("Received request: ["
         + receivedRequest
         + "]")
 
-      CommandRouter.router(receivedRequest, spark)
-
-      val reply = ("Job "+ParseSQL.getJobNo()+" is finished.").getBytes
-      reply(reply.length-1)=0
-      socket.send(reply, 0)
+      CommandRouter.router(receivedRequest, spark, socket)
 
     }
   }
