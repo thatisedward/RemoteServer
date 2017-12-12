@@ -18,10 +18,10 @@ object ZeromqServer {
 
     val context = ZMQ.context(1)
     val socket = context.socket(ZMQ.REP)
-    print ("Starting ")
+    print ("The ZMQ server starting ")
     val address = "tcp://*:"+ReadProperties.getZmq_port()
     socket.bind(address)
-    println ("On port: "+ ReadProperties.getZmq_port())
+    println ("on port: "+ ReadProperties.getZmq_port())
     //socket.bind ("tcp://*:5555")
 
     while (true) {

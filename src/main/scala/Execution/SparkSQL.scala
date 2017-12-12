@@ -17,8 +17,13 @@ object SparkSQL {
     val password = ReadProperties.getPgDB_password()
 
     val connectionProperties = new Properties()
-    connectionProperties.put("user", user)
-    connectionProperties.put("password", password)
+
+    try{
+      connectionProperties.put("user", user)
+      connectionProperties.put("password", password)
+    }catch{
+      case e: InterruptedException => e.printStackTrace()
+    }
 
     val sqlCommand = ParseSQL.getSqlCommand()
     val inputList = ParseSQL.getInputList()
@@ -40,6 +45,7 @@ object SparkSQL {
 
     for(i <- 0 until numberOfTables){
       inputTables(i) = inputList(i)
+
       if(!localTempView.contains(inputTables(i))){
         localTempView += inputTables(i)
         spark.read.jdbc(url, inputTables(i), connectionProperties).createTempView(inputTables(i))
@@ -51,7 +57,7 @@ object SparkSQL {
     executeCommand.write
       .jdbc(url, outputTable, connectionProperties)
 
-    println("Job is succeed...")
+    println("SQL Job "+ParseSQL.getJobNo()+ " is succeeded...")
 
     //executeCommand.show()
     //executeCommand.explain()

@@ -15,7 +15,10 @@ object CommandRouter {
     if(tempCmd(0) matches("LR")){
       println("Later...")
     }
-    else println("ILLEGAL REQUEST: "+tempCmd(1)+". Please check the header info.")
+    else {
+      println("-----ILLEGAL REQUEST-----\n"+receivedRequest+".\n-----Please Check-----!\n")
+      println("The format should be something as \"SQL%1234%Select * from ...%table_name%output_table\"...\n")
+    }
 
   }
 }
