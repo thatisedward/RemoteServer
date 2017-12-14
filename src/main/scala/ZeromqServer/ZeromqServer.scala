@@ -13,7 +13,7 @@ object ZeromqServer {
   def main(args : Array[String]) {
 
     val spark = SparkSession.builder()
-        .master("local")
+        //.master("local[*]")
         .getOrCreate()
 
     val context = ZMQ.context(1)
@@ -27,6 +27,8 @@ object ZeromqServer {
 
     while (true) {
       //  Wait for next request from client
+
+      println("\nWaiting for request on port: " + ReadProperties.getZmq_port()+"\n")
 
       val request = socket.recv (0)
 

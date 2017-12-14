@@ -40,6 +40,8 @@ object SparkSQL {
       .createTempView("tempView_name")
     */
 
+    val loadTablesTime_start = System.currentTimeMillis()
+
     for(i <- 0 until numberOfTables) {
       inputTables(i) = inputList(i)
 
@@ -49,30 +51,52 @@ object SparkSQL {
         spark.read
           .jdbc(url, inputTables(i), connectionProperties)
           .createTempView(inputTables(i))
+
       }
+
     }
+
+    val loadTablesTime = System.currentTimeMillis()-loadTablesTime_start
+
+    println("=> Tables were loaded in: "+ loadTablesTime + " ms...")
 
     try {
 
+      val sqlExecuteTime_start = System.currentTimeMillis()
+
       val executeCommand = spark.sql(sqlCommand)
-      println("The SQL command is executed.")
+
+      executeCommand.show()
+
+      val sqlExecuteTime = System.currentTimeMillis()-sqlExecuteTime_start
+
+      println("=> The SQL command was executed in: "+ sqlExecuteTime+ " ms...")
+
+      val JDBCWriteBackTime_start = System.currentTimeMillis()
 
       executeCommand.write
         .jdbc(url, outputTable, connectionProperties)
 
-      println("SQL Job " + ParseSQL.getJobNo() + " is succeeded...")
+      val JDBCWriteBackTime = System.currentTimeMillis()-JDBCWriteBackTime_start
 
-      val reply = ("SQL Job " + ParseSQL.getJobNo() + " is succeeded...").getBytes
+      val printInfo = "SQL Job " + ParseSQL.getJobNo() + " is completed.\n" +
+        "=> Tables were loaded in: "+ loadTablesTime + " ms.\n"+
+        "=> The SQL command was executed in: "+ sqlExecuteTime+ " ms.\n"+
+        "=> The Write BACK TO OUTPUT_TABLE is finished in: "+ JDBCWriteBackTime + " ms.\n"
+
+      println(printInfo)
+
+      val reply = (printInfo).getBytes
       reply(reply.length-1)=0
       socket.send(reply, 0)
 
-      executeCommand.show()
     }
     catch {
         case e: Exception => {
           e.printStackTrace()
+          val notifyMessage = "\nSQL Job " + ParseSQL.getJobNo() + " failed, causing by:\n"
+          val exception = (notifyMessage + e.toString).getBytes()
 
-          val exception = e.toString.getBytes()
           exception(exception.length - 1) = 0
           socket.send(exception, 0)
 
