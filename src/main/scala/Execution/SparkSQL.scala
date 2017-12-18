@@ -40,33 +40,27 @@ object SparkSQL {
       .createTempView("tempView_name")
     */
 
-    val loadTablesTime_start = System.currentTimeMillis()
-
     for(i <- 0 until numberOfTables) {
       inputTables(i) = inputList(i)
 
       if (!localTempView.contains(inputTables(i))) {
         localTempView += inputTables(i)
 
-        spark.read
+        val df = spark.read
           .jdbc(url, inputTables(i), connectionProperties)
-          .createTempView(inputTables(i))
 
+        df.createOrReplaceTempView(inputTables(i))
+
+        df.cache()
       }
 
     }
-
-    val loadTablesTime = System.currentTimeMillis()-loadTablesTime_start
-
-    println("=> Tables were loaded in: "+ loadTablesTime + " ms...")
 
     try {
 
       val sqlExecuteTime_start = System.currentTimeMillis()
 
-      val executeCommand = spark.sql(sqlCommand)
-
-      executeCommand.show()
+      val ec = spark.sql(sqlCommand).cache()
 
       val sqlExecuteTime = System.currentTimeMillis()-sqlExecuteTime_start
 
@@ -74,13 +68,12 @@ object SparkSQL {
 
       val JDBCWriteBackTime_start = System.currentTimeMillis()
 
-      executeCommand.write
-        .jdbc(url, outputTable, connectionProperties)
+      ec.write
+        .jdbc(url, "result_ecWrite", connectionProperties)
 
       val JDBCWriteBackTime = System.currentTimeMillis()-JDBCWriteBackTime_start
 
-      val printInfo = "SQL Job " + ParseSQL.getJobNo() + " is completed.\n" +
-        "=> Tables were loaded in: "+ loadTablesTime + " ms.\n"+
+      val printInfo = "\nSQL Job " + ParseSQL.getJobNo() + " is completed.\n" +
         "=> The SQL command was executed in: "+ sqlExecuteTime+ " ms.\n"+
         "=> The Write BACK TO OUTPUT_TABLE is finished in: "+ JDBCWriteBackTime + " ms.\n"
 
