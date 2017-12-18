@@ -60,7 +60,9 @@ object SparkSQL {
 
       val sqlExecuteTime_start = System.currentTimeMillis()
 
-      val ec = spark.sql(sqlCommand).cache()
+      val ec = spark.sql(sqlCommand)
+
+      ec.cache()
 
       val sqlExecuteTime = System.currentTimeMillis()-sqlExecuteTime_start
 
@@ -69,7 +71,7 @@ object SparkSQL {
       val JDBCWriteBackTime_start = System.currentTimeMillis()
 
       ec.write
-        .jdbc(url, "result_ecWrite", connectionProperties)
+        .jdbc(url, outputTable, connectionProperties)
 
       val JDBCWriteBackTime = System.currentTimeMillis()-JDBCWriteBackTime_start
 
