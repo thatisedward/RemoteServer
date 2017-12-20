@@ -13,7 +13,7 @@ object ZeromqServer {
   def main(args : Array[String]) {
 
     val spark = SparkSession.builder()
-        //.master("local[*]")
+        .master("spark://172.16.101.148:7077")
         .getOrCreate()
 
     val context = ZMQ.context(1)

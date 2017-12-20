@@ -76,8 +76,8 @@ object SparkSQL {
       val JDBCWriteBackTime = System.currentTimeMillis()-JDBCWriteBackTime_start
 
       val printInfo = "\nSQL Job " + ParseSQL.getJobNo() + " is completed.\n" +
-        "=> The SQL command was executed in: "+ sqlExecuteTime+ " ms.\n"+
-        "=> The Write BACK TO OUTPUT_TABLE is finished in: "+ JDBCWriteBackTime + " ms.\n"
+        "=> The SQL command was executed: "+ sqlExecuteTime+ " ms.\n"+
+        "=> Write back to PostgresSQL was finished: "+ JDBCWriteBackTime + " ms.\n"
 
       println(printInfo)
 
